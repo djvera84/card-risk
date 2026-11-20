@@ -1,0 +1,54 @@
+# Default configuration for the fraud detection pipeline.
+# Paths are relative to the project root (where you run the commands from).
+
+paths:
+  raw_dir: data/raw
+  interim_dir: data/interim
+  processed_dir: data/processed
+  artifacts_dir: artifacts
+
+data:
+  download_url: https://raw.github.com/CapitalOneRecruiting/DS/master/transactions.zip
+  raw_filename: transactions.txt
+
+split:
+  # Out-of-time split: the most recent `test_fraction` of transactions is held out as the test set,
+  # and the most recent `valid_fraction` of the remaining training data is used for early stopping
+  # and threshold selection.
+  test_fraction: 0.05
+  valid_fraction: 0.05
+
+training:
+  random_state: 42
+  n_estimators: 1000
+  early_stopping_rounds: 25
+  # Chosen on the validation month: these lightly regularized params gave validation ROC AUC
+  # 0.853 vs 0.776 for the heavily regularized ones (min_child_weight 500, gamma 10) from the
+  # original notebook. If artifacts/best_params.json (from `fraud-tune`) exists it takes precedence.
+  params:
+    learning_rate: 0.1
+    max_depth: 5
+    subsample: 0.8
+    colsample_bytree: 0.8
+    min_child_weight: 1
+    gamma: 0.0
+  # Operating threshold is chosen on the validation set (never the test set) as the highest
+  # threshold that reaches this recall.
+  target_recall: 0.80
+
+tuning:
+  n_iter: 20
+  n_splits: 3
+  n_estimators: 200
+  param_space:
+    learning_rate: [0.05, 0.1, 0.3]
+    max_depth: [2, 3, 5, 7]
+    subsample: [0.5, 0.75, 1.0]
+    colsample_bytree: [0.7, 0.9]
+    min_child_weight: [1, 50, 250, 500, 1250]
+    gamma: [0, 1, 2.5, 5.0, 10.0]
+
+baselines:
+  n_splits: 5
+  # Cross validating on every row is slow for the linear model; use the most recent N training rows.
+  max_rows: 300000

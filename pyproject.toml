@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "card-risk"
+version = "0.1.0"
+description = "Credit card risk ML: transaction fraud model, underwriting model and a Monte Carlo credit policy simulator."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "pyarrow>=14",
+    "scikit-learn>=1.4",
+    "xgboost>=2.0",
+    "pyyaml>=6.0",
+    "joblib>=1.3",
+    "matplotlib>=3.8",
+    "seaborn>=0.13",
+    "shap>=0.45",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8", "ruff>=0.5"]
+dev = ["pytest>=8", "ruff>=0.5", "jupyter", "nbconvert"]
+
+[project.scripts]
+fraud-prepare-data = "card_risk.data_utils.preprocessing:main"
+fraud-build-features = "card_risk.features.build:main"
+fraud-baselines = "card_risk.fraud.baselines:main"
+fraud-tune = "card_risk.fraud.tune:main"
+fraud-train = "card_risk.fraud.train:main"
+fraud-evaluate = "card_risk.fraud.evaluate:main"
+underwriting-simulate = "card_risk.underwriting.simulate:main"
+underwriting-train = "card_risk.underwriting.train:main"
+credit-simulator = "card_risk.simulator.run:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.format]
+# Keep the ''' docstrings.
+quote-style = "preserve"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["N802"]
