@@ -50,10 +50,13 @@ Built on the public [Capital One Recruiting data science challenge](https://gith
 - **Features** (`card_risk.features`): expanding-window history of each customer's previous amounts and inter-transaction times, rolling 2/3/5/25 transaction stats and their ratio to history, 1h and 24h velocity, first-time-at-merchant, CVV match, utilization, days since address change, foreign merchant. Every history feature uses only earlier transactions, and a unit test checks that changing a later transaction never changes earlier features.
 - **Model:** XGBoost, compared with time-series cross validation against logistic regression (CV AUC 0.77) and random forest (0.76); XGBoost reached 0.81. Early stopping, hyperparameter choice and the decision threshold all use a validation month, so the test month is touched once. Lighter regularization lifted validation AUC from 0.78 to 0.85 over the heavily regularized settings of the first pass.
 
-<p>
-<img src="docs/images/fraud_roc_curve.png" width="45%">
-<img src="docs/images/fraud_shap_summary.png" width="45%">
-</p>
+<img src="docs/images/fraud_roc_curve.png" width="70%" alt="ROC curve of the fraud model on the out-of-time test month">
+
+*ROC curve on the out-of-time test month (AUC 0.84). The dashed line is a model with no skill.*
+
+<img src="docs/images/fraud_shap_summary.png" width="60%" alt="SHAP summary of the fraud model's 20 most important features">
+
+*SHAP summary of the 20 most important features. Each dot is one transaction: its position shows how far that feature moved the fraud score, and its colour shows the feature's value. Larger amounts raise the score; chip (POS entry mode 05), card-present, fuel, mobile app and subscription transactions lower it.*
 
 ## Underwriting model
 
