@@ -4,6 +4,8 @@ Credit card risk modeling, end to end: a **transaction fraud model** on 786k rea
 
 Everything is a tested Python package with a command line pipeline; the notebooks are the exploration and the narrative.
 
+> **About this project.** This is a personal project, not a production system: a simplified example of how I would approach these problems and design such a system. I built it after leaving Capital One, using Claude Code. At Capital One I led the development of a production portfolio simulator for the bank's credit managers, which was adopted into its Credit College curriculum. This project is a separate, independent version and contains no Capital One code, models, internal data or other proprietary information. The applicant population, loss model and economic scenarios are synthetic, with illustrative parameters chosen to fall in typical public ranges. The only outside data is a public dataset: the transaction file Capital One released publicly for its recruiting challenge, freely available on GitHub.
+
 | | Data | Model | Out-of-time result |
 |---|---|---|---|
 | Fraud | 786,363 card transactions (2016), 1.6% fraud | XGBoost on ~100 leak-free history, velocity and account features | ROC AUC **0.84**, PR AUC 0.25; catches **76%** of fraud transactions and **85%** of fraud dollars at the threshold chosen on validation |
